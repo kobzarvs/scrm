@@ -29,7 +29,8 @@ var UserInfo = React.createClass({
   },  
 
   onChange: function(e) {
-    this.setState({email: AppStore.email});
+    if (this.isMounted())
+      this.setState({email: AppStore.email});
   },
 
   componentDidMount: function() {
@@ -77,6 +78,7 @@ var App = React.createClass({
  	},
 
   componentWillUnmount: function() {
+    console.log("unmount");
     AppStore.removeChangeListener(this.onChange);
   },
 
@@ -91,26 +93,27 @@ var App = React.createClass({
  	},
 
   render: function() {
-  	var connStatus = cx({
-  		'connection_status': true,
-  		'offline': (AppStore.eventSourceStatus == ActionTypes.EVENT_SOURCE_CONNECTING)
-  	});
+
 
     if (!AppStore.email) {
-      
-      return <LoginScreen />
+      s = <LoginScreen />
 
     } else {
-      return (
-        <div>
+      s =
+      <div>
           <UserInfo />
 
           <br />
 
           <ClientList></ClientList>
-        </div>
-      )
+      </div>
     }
+
+    return (
+      <div>
+        {s}
+      </div>
+    )
   }
 
 });

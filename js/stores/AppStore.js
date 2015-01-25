@@ -55,9 +55,9 @@ function onChangeStorage(key, action, interval) {
 		var val = simpleStorage.get(key);
 		console.log(val);
 		if (val === undefined) {
-			action();
-		    console.log("tid: " + tid);
 	  		clearInterval(tid);
+		    console.log("tid: " + tid);
+			action();
 		}
 	}.bind(this), interval);
 }
@@ -70,22 +70,59 @@ ad = AppDispatcher.register(function(payload) {
 	switch(payload.source) {
 
 		//
-		//	VIEW ACTIONS
+		//	STORAGE ACTIONS
 		//
 		case PayloadSources.STORAGE_ACTION:
 			console.log("PayloadSources.STORAGE_ACTION", payload.action);
 
 			switch(action.actionType) {
+				default:
+					return true;
+			}
+			break;
+
+
+		//
+		//	LOGIN ACTIONS
+		//
+		case PayloadSources.LOGIN_ACTION:
+			console.log("PayloadSources.LOGIN_ACTION", payload.action);
+
+			switch(action.actionType) {
+
+				case ActionTypes.LOGIN:
+
+					fdb.authWithOAuthPopup("facebook", function(error, authData) {
+					  if (error) {
+					    console.log("Login Failed!", error);
+
+					  } else {
+					    AppStore.email = authData.facebook.email;
+					    AppStore.uid = authData.uid;
+					    
+					    fdb = new Firebase(FIREBASE + AppStore.uid);
+
+					    simpleStorage.set('email', AppStore.email, {TTL: 1000*5});
+					    onChangeStorage('email', AppActions.logout, 1000);
+					    AppActions.loginSuccess();
+					  }
+					}, {
+						scope: "email"
+					});
+					break;
 
 				case ActionTypes.LOGIN_SUCCESS:
 					console.log("handle: login success");
+					break;
+
+				case ActionTypes.LOGOUT:
+					AppStore.email = null;
 					break;
 
 				default:
 					return true;
 			}
 			break;
-
 
 		//
 		//	VIEW ACTIONS
@@ -94,36 +131,6 @@ ad = AppDispatcher.register(function(payload) {
 			console.log("PayloadSources.VIEW_ACTION", payload.action);
 
 			switch(action.actionType) {
-				
-				case ActionTypes.LOGOUT:
-					AppStore.email = null;
-					break;
-
-				case ActionTypes.LOGIN:
-
-					fdb.authWithOAuthPopup("facebook", function(error, authData) {
-					  if (error) {
-					    console.log("Login Failed!", error);
-					  } else {
-					    AppStore.email = authData.facebook.email;
-					    AppStore.uid = authData.uid;
-					    
-					    console.log('UID: '+AppStore.uid);
-					    fdb = new Firebase(FIREBASE + AppStore.uid);
-
-					    simpleStorage.set('email', AppStore.email, {TTL: 1000*5});
-					    onChangeStorage('email', AppActions.logout, 1000);
-
-					    AppDispatcher.handleStorageAction({
-				  			actionType: ActionTypes.LOGIN_SUCCESS
-				  		});
-					  }
-					}, {
-						scope: "email"
-					});
-					break;
-
-
 				default:
 					return true;
 		}

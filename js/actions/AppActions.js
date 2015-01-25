@@ -6,30 +6,22 @@ var AppConstants = require('../constants/AppConstants'),
 var AppActions = {
 
   login: function() {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.handleLoginAction({
       actionType: ActionTypes.LOGIN
     });
   },
 
   logout: function() {
-    AppDispatcher.handleViewAction({
+    AppDispatcher.handleLoginAction({
       actionType: ActionTypes.LOGOUT
     });
   },
 
-  getServerTime: function() {
-    AppDispatcher.handleViewAction({
-      actionType: ActionTypes.GET_SERVER_TIME
+  loginSuccess: function() {
+    AppDispatcher.handleLoginAction({
+      actionType: ActionTypes.LOGIN_SUCCESS
     });
-  },
-
-  setOnline: function() {
-    AppDispatcher.handleViewAction({
-      actionType: ActionTypes.SET_EVENT_SOURCE_ONLINE
-    });
-  },
-
-
+  }
 
 };
 

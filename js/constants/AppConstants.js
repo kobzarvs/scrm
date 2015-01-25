@@ -16,7 +16,8 @@ module.exports = {
 
   PayloadSources: keyMirror({
     STORAGE_ACTION: null,
-    VIEW_ACTION: null
+    VIEW_ACTION: null,
+    LOGIN_ACTION: null
   })
 
 };
