@@ -1,0 +1,53 @@
+.connection_status {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	opacity: 1;
+	color: white;
+	background: green;
+	transition: 1s;
+}
+
+.connection_status.offline {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	opacity: 1;
+	background: red;
+	color: white;
+	transition: 1s;
+}
+
+.tab1 {
+	padding-left: 4em;
+	border: red 1px;
+}
+
+.dimmer > .content > div > .header > .icon {
+  -webkit-transition:
+    color 0.6s ease,
+    transform 0.2s ease
+  ;
+  -moz-transition:
+    color 0.6s ease,
+    transform 0.2s ease
+  ;
+  -o-transition:
+    color 0.6s ease,
+    transform 0.2s ease
+  ;
+  -ms-transition:
+    color 0.6s ease,
+    transform 0.2s ease
+  ;
+  transition:
+    color 0.6s ease,
+    transform 0.2s ease
+  ;
+}
+
+.dimmer > .content > div > .header > .icon:hover {
+  -webkit-transform: scale(1.5);
+  -moz-transform: scale(1.5);
+  -o-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  transform: scale(1.5);
+}
