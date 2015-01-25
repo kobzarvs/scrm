@@ -99,10 +99,13 @@ ad = AppDispatcher.register(function(payload) {
 					  } else {
 					    AppStore.email = authData.facebook.email;
 					    AppStore.uid = authData.uid;
-					    
+
+					    console.log(authData.facebook.cachedUserProfile);
+					    AppStore.user = authData.facebook.cachedUserProfile;
+					    					    
 					    fdb = new Firebase(FIREBASE + AppStore.uid);
 
-					    simpleStorage.set('email', AppStore.email, {TTL: 1000*5});
+					    simpleStorage.set('email', AppStore.email, {TTL: 1000*30});
 					    onChangeStorage('email', AppActions.logout, 1000);
 					    AppActions.loginSuccess();
 					  }

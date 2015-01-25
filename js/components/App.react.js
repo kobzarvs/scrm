@@ -21,7 +21,7 @@ var connStatusText = {
 
 
 
-var UserInfo = React.createClass({
+var MainMenu = React.createClass({
   getInitialState: function() {
     return {
       email: AppStore.email
@@ -48,16 +48,35 @@ var UserInfo = React.createClass({
 
   render: function() {
 
-    var userInfo;
+    var mainMenu;
+
+    mainMenu = <div className="ui fixed inverted main menu">
+      <a className="active item">
+        <i className="home icon"></i> Home
+      </a>
+      <a className="item">
+        <i className="mail icon"></i> Messages
+      </a>
+
+      <div className="right menu">
+        <div className="item">
+          <i className="facebook square icon"></i> Logout
+        </div>
+        <div className="item" style={{padding:0, margin:0}}>
+          <img src={AppStore.user.picture.data.url} style={{height:34, width:34, padding:0, margin:0}} />
+        </div>
+      </div>
+    </div>
 
     if (AppStore.email) {
-        userInfo = <div><b>User: </b> {AppStore.email}</div>
+//        userInfo = <div><b>User: </b> {AppStore.email}</div>
+
 
     } else {
-        userInfo = <input type="button" onClick={this.onclick} value="Logout" />
+//        userInfo = <input type="button" onClick={this.onclick} value="Logout" />
     }
 
-    return userInfo;
+    return mainMenu;
   }
 
 });
@@ -69,7 +88,6 @@ var App = React.createClass({
 	getInitialState: function() {
 
 		return {
-			time: ''
 		}
 	},  
 
@@ -99,14 +117,7 @@ var App = React.createClass({
       s = <LoginScreen />
 
     } else {
-      s =
-      <div>
-          <UserInfo />
-
-          <br />
-
-          <ClientList></ClientList>
-      </div>
+      s = <MainMenu />
     }
 
     return (
