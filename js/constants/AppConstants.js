@@ -3,23 +3,19 @@ var keyMirror = require('keymirror');
 
 module.exports = {
 
+  FIREBASE: "https://blistering-heat-2586.firebaseio.com/",
+
   ActionTypes: keyMirror({
     LOGIN: null,
     LOGIN_SUCCESS: null,
     SESSION_EXPIRED: null,
+    LOGOUT: null,
 
-    SERVER_TIME: null,
-    GET_SERVER_TIME: null,
-
-    EVENT_SOURCE_OFFLINE: null,
-    SET_EVENT_SOURCE_ONLINE: null,
-    EVENT_SOURCE_ONLINE: null,
-    EVENT_SOURCE_CONNECTING: null,
-    EVENT_SOURCE_ERROR: null,
+    STORAGE_VALUE_EXPIRED: null,
   }),
 
   PayloadSources: keyMirror({
-    SERVER_ACTION: null,
+    STORAGE_ACTION: null,
     VIEW_ACTION: null
   })
 

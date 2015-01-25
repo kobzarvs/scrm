@@ -1,7 +1,8 @@
 var React = require('react');
 var cx = require('react/lib/cx');
 
-var ClientList = require('./ClientList.react.js');
+var ClientList = require('./ClientList.react');
+var LoginScreen = require('./LoginScreen.react');
 
 var AppStore = require('../stores/AppStore');
 var AppActions = require('../actions/AppActions');
@@ -45,10 +46,6 @@ var UserInfo = React.createClass({
   },
 
   render: function() {
-    var connStatus = cx({
-      'connection_status': true,
-      'offline': (AppStore.eventSourceStatus == ActionTypes.EVENT_SOURCE_CONNECTING)
-    });
 
     var userInfo;
 
@@ -56,7 +53,7 @@ var UserInfo = React.createClass({
         userInfo = <div><b>User: </b> {AppStore.email}</div>
 
     } else {
-        userInfo = <input type="button" onClick={this.onclick} value="Login" />
+        userInfo = <input type="button" onClick={this.onclick} value="Logout" />
     }
 
     return userInfo;
@@ -77,7 +74,6 @@ var App = React.createClass({
 
  	componentDidMount: function() {
  		AppStore.addChangeListener(this.onChange);
- 		AppActions.setOnline();
  	},
 
   componentWillUnmount: function() {
@@ -87,12 +83,6 @@ var App = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState) {
  		var as = AppStore.getState();
 
- 		if (!AppStore.waitForTime && as.time == null && AppStore.eventSourceStatus == ActionTypes.EVENT_SOURCE_ONLINE) {
- 			AppStore.waitForTime = true;
-			AppActions.getServerTime();
-			console.log("query");
- 		}
-
 		return true;
 	},
 
@@ -100,28 +90,27 @@ var App = React.createClass({
  		this.setState(AppStore.getState());
  	},
 
- 	onclick: function(e) {
- 		console.log("click");
-		AppActions.getServerTime();
- 	},
-
   render: function() {
   	var connStatus = cx({
   		'connection_status': true,
   		'offline': (AppStore.eventSourceStatus == ActionTypes.EVENT_SOURCE_CONNECTING)
   	});
-    return (
-      <div>
-      	<b>Status: </b>
-      	<span className={connStatus}>{connStatusText[AppStore.eventSourceStatus]}</span>
-        <UserInfo />
-        <br />
-      	<b>Time: </b>{this.state.time}
-      	<input type="button" onClick={this.onclick} value="Get Server Time" />
-        <br />
-        <ClientList></ClientList>
-      </div>
-    )
+
+    if (!AppStore.email) {
+      
+      return <LoginScreen />
+
+    } else {
+      return (
+        <div>
+          <UserInfo />
+
+          <br />
+
+          <ClientList></ClientList>
+        </div>
+      )
+    }
   }
 
 });

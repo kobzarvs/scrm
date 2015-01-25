@@ -8,10 +8,10 @@ var Dispatcher = require('flux').Dispatcher;
 
 
 var AppDispatcher = assign(new Dispatcher(), {
-  handleServerAction: function(action) {
+  handleStorageAction: function(action) {
     setTimeout(function() {
       this.dispatch({
-        source: PayloadSources.SERVER_ACTION,
+        source: PayloadSources.STORAGE_ACTION,
         action: action
       });
     }.bind(this), 0);

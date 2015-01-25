@@ -11,13 +11,11 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 
 
 
-
-var ClientList = React.createClass({
+var LoginScreen = React.createClass({
 	mixins: [],
 	
 	
 	getInitialState: function() {
-
 		return {
 			
 		};
@@ -72,79 +70,31 @@ var ClientList = React.createClass({
 	// timers or cleaning up any DOM elements that were created in componentDidMount.
   	componentWillUnmount: function() {
 	},
-
-	onclick: function() {
-		console.log("click");
-		$('.ui.modal')
-			.modal({
-			    closable  : false,
-			  })
-			.modal('show');
-	},
 	
+	login: function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+
+	    AppActions.login();
+	},
+
 	render: function() {
-		var cln = [];
-
-		_.forIn(clients, function(n, key) {
-
-			return (
-				cln.push(
-				<a className="item" style={{paddingLeft:"2em"}} key={key}>
-			    	<b>{n.name}</b>
-			    	<div>
-			    	<i className="call icon"></i>{n.phone}<br />
-	    			<i className="marker icon"></i>{n.orient}
-	    			</div>
-			  	</a>
-			  	)
-			)
-		});
-
-
-			return (
-			<div>
-				<div>
-				{simpleStorage.get('email')}
-				</div>
-				<div className="ui vertical menu">
-					<div className="item">
-						<div className="ui input"><input type="text" placeholder="Поиск..." /></div>
+		
+		return (
+			<div className={cx({"ui dimmer page":true, "transition visible active":!AppStore.email})}>
+				<div className="content modal">
+    				<div className="center">
+    					<h2 className="ui inverted icon header" onClick={this.login} onTouchEnd={this.login}>
+						<i className="massive facebook square icon"></i>
+						Login
+						</h2>
 					</div>
-
-					<div>
-						<div className="ui two column grid">
-						    <div className="column">
-						      	<i className="user icon"></i>
-								Клиенты
-						    </div>
-						    <div className="right aligned column">
-						      	<div className="mini compact ui icon button" onClick={this.onclick}>
-									<i className="add icon"></i>
-								</div>
-						    </div>
-						</div>
-					</div>
-
-					{cln}
 				</div>
 			</div>
-			);
+		);
 	}
 
 });
 
-var clients = {
-	1: {
-		name: "Наталья Михайловна",
-		orient: "Театральная",
-		phone: "911 123-1212"
-	},
-	
-	2: {
-		name: "Роман",
-		orient: "Техноложка",
-		phone: "931 333-1212"
-	},
-};
 
-module.exports = ClientList;
+module.exports = LoginScreen;

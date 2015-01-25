@@ -11,6 +11,12 @@ var AppActions = {
     });
   },
 
+  logout: function() {
+    AppDispatcher.handleViewAction({
+      actionType: ActionTypes.LOGOUT
+    });
+  },
+
   getServerTime: function() {
     AppDispatcher.handleViewAction({
       actionType: ActionTypes.GET_SERVER_TIME
