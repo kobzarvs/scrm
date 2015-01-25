@@ -8,12 +8,12 @@
  */
 
 var React = require('react');
-var NeoCom = require('./components/NeoCom.react');
+var App = require('./components/App.react');
 
 React.initializeTouchEvents(true);
 
 
 React.render(
-  <NeoCom />,
-  document.getElementById('neocom')
+  <App />,
+  document.getElementById('app')
 );

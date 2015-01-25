@@ -67,7 +67,7 @@ var UserInfo = React.createClass({
 
 
 
-var NeoCom = React.createClass({
+var App = React.createClass({
 	getInitialState: function() {
 
 		return {
@@ -126,6 +126,6 @@ var NeoCom = React.createClass({
 
 });
 
-module.exports = NeoCom;
+module.exports = App;
 
 

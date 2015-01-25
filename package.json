@@ -1,7 +1,7 @@
 {
-  "name": "neocom",
+  "name": "sCRM",
   "version": "0.0.1",
-  "description": "NeoCom application",
+  "description": "sCRM application",
   "main": "js/app.js",
   "dependencies": {
     "firebase": "^2.1.1",
