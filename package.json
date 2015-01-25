@@ -21,7 +21,8 @@
   },
   "scripts": {
     "start": "watchify -o lib/bundle.js -v -d .",
-    "build": "NODE_ENV=production browserify . | uglifyjs -cm > bundle.min.js",
+    "deploy": "browserify . | uglifyjs -cm > lib/bundle.js; firebase deploy",
+    "build": "browserify . > lib/bundle.js",
     "test": "jest"
   },
   "author": "Valeriy Kobzar",
