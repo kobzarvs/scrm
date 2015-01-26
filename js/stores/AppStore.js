@@ -18,16 +18,11 @@ var AppStore;
 
 
 AppStore = assign({}, EventEmitter.prototype, {
-	email: null,
-	uid: null,
+	userInfo: undefined,
 
 	getState: function() {
-		return {
-			user: {
-				email: this.email,
-				uid: this.uid
-			}
-		}
+	    this.userInfo = simpleStorage.get('userInfo');
+		return this.userInfo;
 	},
 
 	emitChange: function() {
@@ -46,21 +41,53 @@ AppStore = assign({}, EventEmitter.prototype, {
 	 */
 	removeChangeListener: function(callback) {
 		this.removeListener(CHANGE_EVENT, callback);
+	},
+
+
+	// Устанавливает наблюдение за переменной в локальном хранилище
+	onChangeStorage: function(key, action, interval) {
+		var ttl = simpleStorage.get('ttlList') || {};
+
+		if (ttl[key]!==undefined) {
+		  	clearInterval(ttl[key]);
+		} else {
+			ttl[key] = [action, interval];
+			simpleStorage.set('ttlList', ttl);
+		}
+
+		tid = setInterval(function(){
+			var val = simpleStorage.get(key);
+
+			if (val === undefined) {
+		  		clearInterval(tid);
+				var ttl = simpleStorage.get('ttlList') || {};
+
+				if (ttl[key]!==undefined) {
+					delete ttl[key];
+					simpleStorage.set('ttlList', ttl);
+				}
+
+				AppDispatcher.handleStorageAction({
+			      actionType: action
+			    });
+			}
+		}.bind(this), interval);
+	},
+
+
+	// Восстанавливает обработчики для всех наблюдаемых переменных локального хранилища
+	initStorage: function() {
+		var ttl = simpleStorage.get('ttlList') || {};
+
+		_.forIn(ttl, function(value, key) {
+			if (simpleStorage.get(key) !== undefined)
+				this.onChangeStorage(key, value[0], value[1]);
+		}.bind(this));
 	}
 });
 
 
-function onChangeStorage(key, action, interval) {
-	tid = setInterval(function(){
-		var val = simpleStorage.get(key);
-		console.log(val);
-		if (val === undefined) {
-	  		clearInterval(tid);
-		    console.log("tid: " + tid);
-			action();
-		}
-	}.bind(this), interval);
-}
+
 
 
 
@@ -73,9 +100,13 @@ ad = AppDispatcher.register(function(payload) {
 		//	STORAGE ACTIONS
 		//
 		case PayloadSources.STORAGE_ACTION:
-			console.log("PayloadSources.STORAGE_ACTION", payload.action);
+			console.log("STORAGE_ACTION", payload.action);
 
 			switch(action.actionType) {
+				case ActionTypes.SESSION_EXPIRED:
+					AppStore.userInfo = undefined;
+					break;
+
 				default:
 					return true;
 			}
@@ -86,7 +117,7 @@ ad = AppDispatcher.register(function(payload) {
 		//	LOGIN ACTIONS
 		//
 		case PayloadSources.LOGIN_ACTION:
-			console.log("PayloadSources.LOGIN_ACTION", payload.action);
+			console.log("LOGIN_ACTION", payload.action);
 
 			switch(action.actionType) {
 
@@ -94,19 +125,15 @@ ad = AppDispatcher.register(function(payload) {
 
 					fdb.authWithOAuthPopup("facebook", function(error, authData) {
 					  if (error) {
-					    console.log("Login Failed!", error);
+					    AppActions.loginFailed();
 
 					  } else {
-					    AppStore.email = authData.facebook.email;
-					    AppStore.uid = authData.uid;
-
-					    console.log(authData.facebook.cachedUserProfile);
-					    AppStore.user = authData.facebook.cachedUserProfile;
+					    AppStore.userInfo = authData.facebook.cachedUserProfile;
 					    					    
 					    fdb = new Firebase(FIREBASE + AppStore.uid);
 
-					    simpleStorage.set('email', AppStore.email, {TTL: 1000*30});
-					    onChangeStorage('email', AppActions.logout, 1000);
+					    simpleStorage.set('userInfo', AppStore.userInfo, {TTL: 1000*5});
+					    AppStore.onChangeStorage('userInfo', ActionTypes.SESSION_EXPIRED, 500);
 					    AppActions.loginSuccess();
 					  }
 					}, {
@@ -115,11 +142,16 @@ ad = AppDispatcher.register(function(payload) {
 					break;
 
 				case ActionTypes.LOGIN_SUCCESS:
-					console.log("handle: login success");
+
+					break;
+
+				case ActionTypes.LOGIN_FAILED:
+
+					AppStore.userInfo = undefined;
 					break;
 
 				case ActionTypes.LOGOUT:
-					AppStore.email = null;
+					AppStore.userInfo = undefined;
 					break;
 
 				default:
@@ -131,7 +163,7 @@ ad = AppDispatcher.register(function(payload) {
 		//	VIEW ACTIONS
 		//
 		case PayloadSources.VIEW_ACTION:
-			console.log("PayloadSources.VIEW_ACTION", payload.action);
+			console.log("VIEW_ACTION", payload.action);
 
 			switch(action.actionType) {
 				default:

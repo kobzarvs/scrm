@@ -17,9 +17,21 @@ var AppActions = {
     });
   },
 
+  sessionExpired: function() {
+    AppDispatcher.handleLoginAction({
+      actionType: ActionTypes.SESSION_EXPIRED
+    });
+  },
+
   loginSuccess: function() {
     AppDispatcher.handleLoginAction({
       actionType: ActionTypes.LOGIN_SUCCESS
+    });
+  },
+
+  loginFailed: function() {
+    AppDispatcher.handleLoginAction({
+      actionType: ActionTypes.LOGIN_FAILED
     });
   }
 

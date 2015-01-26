@@ -8,6 +8,7 @@ module.exports = {
   ActionTypes: keyMirror({
     LOGIN: null,
     LOGIN_SUCCESS: null,
+    LOGIN_FAILED: null,
     SESSION_EXPIRED: null,
     LOGOUT: null,
 
