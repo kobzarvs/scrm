@@ -1,4 +1,5 @@
-var assign = require('object-assign');
+//var assign = require('object-assign');
+var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
 
 var AppConstants = require('../constants/AppConstants'),
@@ -12,27 +13,15 @@ var AppActions = require('../actions/AppActions');
 var Firebase = require("firebase"),
 	fdb = new Firebase(FIREBASE);
 
-var _ = require('lodash');
-
-// var simpleStorage = {
-// 	get: function() {
-// 		console.log("get");
-// 	},
-// 	set: function() {
-// 		console.log("set");
-// 	}
-
-// };
 var simpleStorage = require('../../lib/simpleStorage.js');
 
 var CHANGE_EVENT = 'change';
 var AppStore = {};
 
 
-//console.log("simpleStorage: " + simpleStorage.get());
 
 
-AppStore = _.assign({}, EventEmitter.prototype, {
+AppStore = {
 	userInfo: undefined,
 
 	getState: function() {
@@ -101,6 +90,7 @@ AppStore = _.assign({}, EventEmitter.prototype, {
 	},
 
 	init: function() {
+		this.initStorage();
 
 		ad = AppDispatcher.register(function(payload) {
 			var action = payload.action;
@@ -128,7 +118,7 @@ AppStore = _.assign({}, EventEmitter.prototype, {
 				//	LOGIN ACTIONS
 				//
 				case PayloadSources.LOGIN_ACTION:
-					// console.log("LOGIN_ACTION", payload.action);
+					//console.log("LOGIN_ACTION", payload.action);
 
 					switch(action.actionType) {
 
@@ -143,7 +133,7 @@ AppStore = _.assign({}, EventEmitter.prototype, {
 							    					    
 							    fdb = new Firebase(FIREBASE + AppStore.uid);
 
-							    simpleStorage.set('userInfo', AppStore.userInfo, {TTL: 1000*5});
+							    simpleStorage.set('userInfo', AppStore.userInfo, {TTL: 1000*60});
 							    AppStore.onChangeStorage('userInfo', ActionTypes.SESSION_EXPIRED, 500);
 							    AppActions.loginSuccess();
 							  }
@@ -190,7 +180,9 @@ AppStore = _.assign({}, EventEmitter.prototype, {
 
 		return ad;
 	}
-});
+};
+
+_.assign(AppStore, EventEmitter.prototype);
 
 
 

@@ -1,4 +1,5 @@
-var assign = require('object-assign');
+//var assign = require('object-assign');
+var _ = require('lodash');
 
 var AppConstants = require('../constants/AppConstants'),
     ActionTypes = AppConstants.ActionTypes,
@@ -6,8 +7,8 @@ var AppConstants = require('../constants/AppConstants'),
 
 var Dispatcher = require('flux').Dispatcher;
 
-
-var AppDispatcher = assign(new Dispatcher(), {
+var AppDispatcher = new Dispatcher();
+_.assign(AppDispatcher, {
   handleStorageAction: function(action) {
 //    setTimeout(function() {
       this.dispatch({
@@ -35,7 +36,6 @@ var AppDispatcher = assign(new Dispatcher(), {
 //    }.bind(this), 0);
   }
 });
-
 
 
 module.exports = AppDispatcher;

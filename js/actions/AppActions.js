@@ -3,6 +3,8 @@ var AppConstants = require('../constants/AppConstants'),
     ActionTypes = AppConstants.ActionTypes,
     PayloadSources = AppConstants.PayloadSources;
 
+//console.log(AppConstants);
+
 var AppActions = {
 
   login: function() {

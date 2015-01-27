@@ -18,7 +18,6 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var App = React.createClass({
 	getInitialState: function() {
     AppStore.init();
-    AppStore.initStorage();
     AppStore.getState();
 		return {
 		}
