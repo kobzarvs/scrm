@@ -17,7 +17,7 @@ describe('App.react', function() {
 	});
 
 
-	it('должен предложить залогиниться', function() {
+	it('должен предложить залогиниться и запустить логин по нажатию на иконку', function() {
 		//simpleStorage.__set_data(getData(false));
 		//console.log(simpleStorage.data);
 
