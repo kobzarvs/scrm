@@ -19,6 +19,7 @@ var App = React.createClass({
 	getInitialState: function() {
     AppStore.init();
     AppStore.getState();
+
 		return {
 		}
 	},  
