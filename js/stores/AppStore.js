@@ -133,7 +133,7 @@ AppStore = {
 							    					    
 							    fdb = new Firebase(FIREBASE + AppStore.uid);
 
-							    simpleStorage.set('userInfo', AppStore.userInfo, {TTL: 1000*60});
+							    simpleStorage.set('userInfo', AppStore.userInfo, {TTL: 1000*60*60});
 							    AppStore.onChangeStorage('userInfo', ActionTypes.SESSION_EXPIRED, 500);
 							    AppActions.loginSuccess();
 							  }
